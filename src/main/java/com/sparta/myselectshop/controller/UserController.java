@@ -9,6 +9,7 @@ import com.sparta.myselectshop.security.UserDetailsImpl;
 import com.sparta.myselectshop.service.FolderService;
 import com.sparta.myselectshop.service.KakaoService;
 import com.sparta.myselectshop.service.UserService;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -79,10 +80,14 @@ public class UserController {
 
     @GetMapping("/user/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        log.info("카카오 로그인 시도, 인가 코드: {}", code); // 추가
+
         String token = kakaoService.kakaoLogin(code);
         Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
         cookie.setPath("/");
         response.addCookie(cookie);
+
         return "redirect:/";
     }
+
 }
