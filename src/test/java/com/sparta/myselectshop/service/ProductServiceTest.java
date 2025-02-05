@@ -12,11 +12,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class) // @Mock 사용을 위해 설정합니다.
@@ -51,8 +54,8 @@ class ProductServiceTest {
 
         Product product = new Product(requestProductDto, user);
 
-        ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository);
-
+        MessageSource messageSource = Mockito.mock(MessageSource.class); // Mock 객체 생성
+        ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository, messageSource);
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
 
         // when
@@ -72,8 +75,8 @@ class ProductServiceTest {
         ProductMypriceRequestDto requestMyPriceDto = new ProductMypriceRequestDto();
         requestMyPriceDto.setMyprice(myprice);
 
-        ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository);
-
+        MessageSource messageSource = Mockito.mock(MessageSource.class); // Mock 객체 생성
+        ProductService productService = new ProductService(productRepository, folderRepository, productFolderRepository, messageSource);
         // when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             productService.updateProduct(productId, requestMyPriceDto);
